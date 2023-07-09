@@ -12,7 +12,6 @@ app.use(express.json());
 // jwt verify function
 
 const jwtVerify = (req, res, next) => {
-   console.log("hit");
    const authorization = req.headers.authorization;
 
    if (!authorization) {
@@ -100,6 +99,10 @@ async function run() {
          const email = req.params.email;
 
          const carts = await cartCollection.find({ email }).toArray();
+         res.send(carts);
+      });
+      app.get("/carts", jwtVerify, async (req, res) => {
+         const carts = await cartCollection.find({}).toArray();
          res.send(carts);
       });
 
