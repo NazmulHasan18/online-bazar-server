@@ -43,7 +43,7 @@ const client = new MongoClient(uri, {
 async function run() {
    try {
       // Connect the client to the server	(optional starting in v4.7)
-      await client.connect();
+      // await client.connect();
 
       const database = client.db("OnlineBazar");
       const productCollection = database.collection("products");
@@ -101,6 +101,20 @@ async function run() {
          const carts = await cartCollection.find({ email }).toArray();
          res.send(carts);
       });
+
+      app.get("/cart/:id", jwtVerify, async (req, res) => {
+         const id = req.params.id;
+
+         const carts = await cartCollection.findOne({ _id: id });
+         res.send(carts);
+      });
+      app.delete("/cart/:id", jwtVerify, async (req, res) => {
+         const id = req.params.id;
+
+         const carts = await cartCollection.deleteOne({ _id: id });
+         res.send(carts);
+      });
+
       app.get("/carts", jwtVerify, async (req, res) => {
          const carts = await cartCollection.find({}).toArray();
          res.send(carts);
